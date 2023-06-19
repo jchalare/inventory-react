@@ -5,6 +5,7 @@ import { useEffect } from "react";
 
 import { AuthLayout } from "../layout/AuthLayout";
 import { useAuthStore, useForm } from "../../hooks";
+import { formatError } from "../../helpers";
 
 
 
@@ -14,7 +15,7 @@ const loginFormFields = {
     loginPassword: '',
 }
 
-
+ 
 
 export const LoginPage = () =>{
 
@@ -30,6 +31,7 @@ export const LoginPage = () =>{
 
    useEffect(() => {
       if ( errorMessage !== undefined ) {
+         
         Swal.fire('Authentication error ', errorMessage, 'error');
       }    
     }, [errorMessage])
@@ -69,8 +71,7 @@ export const LoginPage = () =>{
                                 > 
                                 Login 
                         </Button>
-                     </Grid>
-                     
+                     </Grid>                     
                   </Grid>
 
                     

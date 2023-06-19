@@ -8,6 +8,7 @@ import { useEffect } from "react";
 
 import { AuthLayout } from "../layout/AuthLayout";
 import { useAuthStore, useForm } from "../../hooks";
+import { formatError } from "../../helpers";
 
 
 const registerFormFields = {
@@ -28,21 +29,7 @@ export const RegisterPage = () =>{
         startRegister({ fullName: registerFullName, email: registerEmail, password: registerPassword });
     }
 
-
-const formatError = (errorMessage)=>{
-
-   if(typeof errorMessage === 'string') return errorMessage;
-
-   let htmlErrorList = '<ul>';
-
-   errorMessage.forEach(element => {
-      htmlErrorList += `<li>${element}</li>`;
-   });
-
-   htmlErrorList += '</ul>';
-   
-   return htmlErrorList;
-}
+    
 
    useEffect(() => {
       if ( errorMessage !== undefined ) {
