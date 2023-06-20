@@ -21,6 +21,9 @@ $ yarn install
 
 ```bash
 #Clone https://github.com/jchalare/inventory-nest please read the README file
+# 1. Seed the backend
+# 2. user: admin@admin.com  password: Abc18556 (administrator) - user: extern@admin.com  password: Abc18556 (external)
+# 3. Log in 
 ```
 
 ## Running the app

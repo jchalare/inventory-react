@@ -1,32 +1,32 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { inventoryApi } from '../api';
-import { selectAllCompanies, checkingCompany, setErrorMessage, clearErrorMessage, selectOneCompany, updateCompany, deleteCompany, createCompany } from '../store/company'
+import { createInventory, updateInventory, selectOneInventory, selectAllCompanies, checkingInventory, setErrorMessage, clearErrorMessage, deleteInventory } from '../store/inventory'
 
- 
-export const useCompanyStore = () => {
 
-    const { loading, companies, errorMessage, status } = useSelector(state => state.company);
+export const useInventoryStore = () => {
+
+    const { loading, inventories, errorMessage, status } = useSelector(state => state.inventory);
     const dispatch = useDispatch();
- 
 
-    const postOneCompany = async ({ name, itin, address, phone_number }) => {
-        dispatch(checkingCompany());
+
+    const postOneInventory = async ({company, product, amount}) => {
+        dispatch(checkingInventory());
+        amount = parseInt(amount);
         try {
             const token = localStorage.getItem('token');
             const { data } = await inventoryApi.post(
-                '/companies',
-                { name, itin, address, phone_number },
+                '/inventories',
+                { company, product, amount },
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 }
-            );            
+            );
 
-            dispatch(createCompany([data]));
+            dispatch(createInventory(data));
 
         } catch (error) {
-            
             dispatch(setErrorMessage(error.response.data?.message || '--'));
             setTimeout(() => {
                 dispatch(clearErrorMessage());
@@ -34,23 +34,27 @@ export const useCompanyStore = () => {
         }
     }
 
-    const pathOneCompany = async ({ companyId,name,itin,address,phone_number }) => {
+    const pathOneInventory = async ({ inventoryId, name, itin, address, phone_number }) => {
 
-        dispatch(checkingCompany());
+        dispatch(checkingInventory());
+
+        console.log({ inventoryId, name, itin, address, phone_number })
+
         try {
             const token = localStorage.getItem('token');
-            const {data} = await inventoryApi.patch(
-                `/companies/${companyId}`,
+            const { data } = await inventoryApi.patch(
+                `/inventories/${inventoryId}`,
                 { name, itin, address, phone_number },
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 }
-            );            
-            dispatch(updateCompany([data]));
+            );
+            dispatch(updateInventory([data]));
 
         } catch (error) {
+            console.log({ error })
             dispatch(setErrorMessage(error.response.data?.detail || '--'));
             setTimeout(() => {
                 dispatch(clearErrorMessage());
@@ -60,42 +64,18 @@ export const useCompanyStore = () => {
 
     const getAllCompanies = async () => {
 
-        dispatch(checkingCompany());
+        dispatch(checkingInventory());
         try {
             const token = localStorage.getItem('token');
             const { data } = await inventoryApi.get(
-                                        '/companies',
-                                        {
-                                            headers: {
-                                                      'Authorization': `Bearer ${token}`
-                                                     }
-                                        }
-                                    );
-            dispatch(selectAllCompanies(data));
-
-        } catch (error) {
-            dispatch(setErrorMessage(error.response.data?.message || '--'));
-           setTimeout(() => {
-                dispatch(clearErrorMessage());
-            }, 10);
-        }
-    }
-
-
-    const getOneCompany = async (companyId) => {
-
-        dispatch(checkingCompany());
-        try {
-            const token = localStorage.getItem('token');
-            const { data } = await inventoryApi.get(
-                `/companies/${companyId}`,
+                '/inventories',
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 }
             );
-            dispatch(selectOneCompany([data]));
+            dispatch(selectAllCompanies(data));
 
         } catch (error) {
             dispatch(setErrorMessage(error.response.data?.message || '--'));
@@ -106,19 +86,43 @@ export const useCompanyStore = () => {
     }
 
 
-    const deleteOneCompany = async (companyId) => {
-        dispatch(checkingCompany());
+    const getOneInventory = async (inventoryId) => {
+
+        dispatch(checkingInventory());
         try {
             const token = localStorage.getItem('token');
-          const {data} =  await inventoryApi.delete(
-                `/companies/${companyId}`,
+            const { data } = await inventoryApi.get(
+                `/inventories/${inventoryId}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 }
             );
-            await deleteCompany([data]);
+            dispatch(selectOneInventory([data]));
+
+        } catch (error) {
+            dispatch(setErrorMessage(error.response.data?.message || '--'));
+            setTimeout(() => {
+                dispatch(clearErrorMessage());
+            }, 10);
+        }
+    }
+
+
+    const deleteOneInventory = async (inventoryId) => {
+        dispatch(checkingInventory());
+        try {
+            const token = localStorage.getItem('token');
+            const { data } = await inventoryApi.delete(
+                `/inventories/${inventoryId}`,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );
+            await deleteInventory([data]);
             await getAllCompanies();
 
         } catch (error) {
@@ -133,15 +137,15 @@ export const useCompanyStore = () => {
         //* Properties
         errorMessage,
         loading,
-        companies,
+        inventories,
         status,
 
         //* Methods        
         getAllCompanies,
-        deleteOneCompany,
-        getOneCompany,
-        pathOneCompany,
-        postOneCompany
+        deleteOneInventory,
+        getOneInventory,
+        pathOneInventory,
+        postOneInventory
     }
 
 }
