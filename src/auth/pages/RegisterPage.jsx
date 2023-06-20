@@ -16,7 +16,7 @@ const registerFormFields = {
     registerEmail:     '',
     registerPassword:  '',
 }
-
+ 
 export const RegisterPage = () =>{
 
    const { errorMessage, startRegister } = useAuthStore();

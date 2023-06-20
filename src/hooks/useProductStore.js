@@ -1,21 +1,26 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { inventoryApi } from '../api';
-import { selectAllCompanies, checkingCompany, setErrorMessage, clearErrorMessage, selectOneCompany, updateCompany, deleteCompany, createCompany } from '../store/company'
+
+import { createProduct, updateProduct, selectOneProduct, selectAllproducts, checkingProduct, setErrorMessage, clearErrorMessage, deleteProduct } from '../store/product'
+
 
  
-export const useCompanyStore = () => {
+export const useProductStore = () => {
 
-    const { loading, companies, errorMessage, status } = useSelector(state => state.company);
+    const { loading, products, errorMessage, status } = useSelector(state => state.product);
     const dispatch = useDispatch();
  
 
-    const postOneCompany = async ({ name, itin, address, phone_number }) => {
-        dispatch(checkingCompany());
+    const postOneProduct = async ({ name, amount, price, description }) => {
+
+        dispatch(checkingProduct());       
+        amount = parseInt(amount);
+        price = parseFloat(price);
         try {
             const token = localStorage.getItem('token');
             const { data } = await inventoryApi.post(
-                '/companies',
-                { name, itin, address, phone_number },
+                '/products',
+                { name, amount, price, description},
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -23,39 +28,9 @@ export const useCompanyStore = () => {
                 }
             );            
 
-            console.log(data);
-            dispatch(createCompany([data]));
+            dispatch(createProduct([data]));
 
         } catch (error) {
-            
-            dispatch(setErrorMessage(error.response.data?.message || '--'));
-            setTimeout(() => {
-                dispatch(clearErrorMessage());
-            }, 10);
-        }
-    }
-
-    const pathOneCompany = async ({ companyId,name,itin,address,phone_number }) => {
-
-        dispatch(checkingCompany());
-
-        console.log({ companyId, name, itin, address, phone_number })
-
-        try {
-            const token = localStorage.getItem('token');
-            const {data} = await inventoryApi.patch(
-                `/companies/${companyId}`,
-                { name, itin, address, phone_number },
-                {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                }
-            );            
-            dispatch(updateCompany([data]));
-
-        } catch (error) {
-            console.log({ error })
             dispatch(setErrorMessage(error.response.data?.detail || '--'));
             setTimeout(() => {
                 dispatch(clearErrorMessage());
@@ -63,20 +38,46 @@ export const useCompanyStore = () => {
         }
     }
 
-    const getAllCompanies = async () => {
+    const pathOneProduct = async ({ productId, name, amount, price, description }) => {
 
-        dispatch(checkingCompany());
+        dispatch(checkingProduct());
+        amount = parseInt(amount);
+        price = parseFloat(price);
+        try {
+            const token = localStorage.getItem('token');
+            const {data} = await inventoryApi.patch(
+                `/products/${productId}`,
+                {  name, amount, price, description },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                }
+            );            
+            dispatch(updateProduct([data]));
+
+        } catch (error) {
+            dispatch(setErrorMessage(error.response.data?.detail || '--'));
+            setTimeout(() => {
+                dispatch(clearErrorMessage());
+            }, 10);
+        }
+    }
+
+    const getAllProducts = async () => {
+
+        dispatch(checkingProduct());
         try {
             const token = localStorage.getItem('token');
             const { data } = await inventoryApi.get(
-                                        '/companies',
+                                        '/products',
                                         {
                                             headers: {
                                                       'Authorization': `Bearer ${token}`
                                                      }
                                         }
                                     );
-            dispatch(selectAllCompanies(data));
+            dispatch(selectAllproducts(data));
 
         } catch (error) {
             dispatch(setErrorMessage(error.response.data?.message || '--'));
@@ -87,20 +88,20 @@ export const useCompanyStore = () => {
     }
 
 
-    const getOneCompany = async (companyId) => {
+    const getOneProduct = async (productId) => {
 
-        dispatch(checkingCompany());
+        dispatch(checkingProduct());
         try {
             const token = localStorage.getItem('token');
             const { data } = await inventoryApi.get(
-                `/companies/${companyId}`,
+                `/products/${productId}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 }
             );
-            dispatch(selectOneCompany([data]));
+            dispatch(selectOneProduct([data]));
 
         } catch (error) {
             dispatch(setErrorMessage(error.response.data?.message || '--'));
@@ -111,20 +112,20 @@ export const useCompanyStore = () => {
     }
 
 
-    const deleteOneCompany = async (companyId) => {
-        dispatch(checkingCompany());
+    const deleteOneProduct = async (productId) => {
+        dispatch(checkingProduct());
         try {
             const token = localStorage.getItem('token');
           const {data} =  await inventoryApi.delete(
-                `/companies/${companyId}`,
+                `/products/${productId}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 }
             );
-            await deleteCompany([data]);
-            await getAllCompanies();
+            await deleteProduct([data]);
+            await getAllProducts();
 
         } catch (error) {
             dispatch(setErrorMessage(error.response.data?.message || '--'));
@@ -138,15 +139,15 @@ export const useCompanyStore = () => {
         //* Properties
         errorMessage,
         loading,
-        companies,
+        products,
         status,
 
         //* Methods        
-        getAllCompanies,
-        deleteOneCompany,
-        getOneCompany,
-        pathOneCompany,
-        postOneCompany
+        getAllProducts,
+        deleteOneProduct,
+        getOneProduct,
+        pathOneProduct,
+        postOneProduct
     }
 
 }

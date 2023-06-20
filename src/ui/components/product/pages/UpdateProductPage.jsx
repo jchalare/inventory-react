@@ -1,34 +1,34 @@
-import { Grid, TextField,Button } from "@mui/material"
+import { Grid, TextField,Button, TextareaAutosize } from "@mui/material"
 import { useParams } from "react-router-dom";
 import { useEffect,useState } from "react";
 import { useDispatch } from "react-redux";
 import Swal from 'sweetalert2';
 
-import { CompanyLayout } from "../layout/CompanyLayout"
-import { useCompanyStore, useForm } from "../../../../hooks";
+import { ProductLayout } from "../layout/ProductLayout"
+import { useProductStore, useForm } from "../../../../hooks";
 
-export const UpdateCompanyPage = () => {
+export const UpdateProductPage = () => {
 
-   const { companyId } = useParams();
+   const { productId } = useParams();
    const dispatch = useDispatch();
-   const { pathOneCompany,companies,getOneCompany,errorMessage,status} = useCompanyStore();
+   const { pathOneProduct,products,getOneProduct,errorMessage,status} = useProductStore();
 
 
-    const mappingCompanyData = ()=> {
+    const mappingProductData = ()=> {
       let info = {};
-      companies.map((company)=>{
-         if (company.id === companyId){
-            info={...company};
+      products.map((product)=>{
+         if (product.id === productId){
+            info={...product};
          }
       });
       delete info.id;
       return info; 
    }
 
-   const [name,setName ] = useState(mappingCompanyData().name);
-   const [itin,setItin ] = useState(mappingCompanyData().itin);
-   const [address,setAddress ] = useState(mappingCompanyData().address);
-   const [phone_number,setPhone ] = useState(mappingCompanyData().phone_number);
+   const [name,setName ] = useState(mappingProductData().name);
+   const [amount,setAmount ] = useState(mappingProductData().amount);
+   const [price,setPrice ] = useState(mappingProductData().price);
+   const [description,setDesc ] = useState(mappingProductData().description);
 
  
   const onChangeInputsValues = (event) =>{
@@ -39,14 +39,14 @@ export const UpdateCompanyPage = () => {
       case 'name':
         setName(event.target.value);
          break;
-      case 'itin':
-         setItin(event.target.value);
+      case 'amount':
+         setAmount(event.target.value);
          break;
-      case 'address':
-          setAddress(event.target.value);
+      case 'price':
+          setPrice(event.target.value);
          break;
-      case 'phone_number':
-      setPhone(event.target.value);
+      case 'description':
+      setDesc(event.target.value);
          break;
       }
    }
@@ -54,24 +54,24 @@ export const UpdateCompanyPage = () => {
 
    const onSubmit = (event)=>{
       event.preventDefault();
-      pathOneCompany({companyId,name,itin,address,phone_number});
+      pathOneProduct({productId,name,amount,price,description});
    }
 
  useEffect(() => {
-    getOneCompany(companyId);
+    getOneProduct(productId);
     if ( errorMessage !== null ) {         
         Swal.fire('Authentication error ', errorMessage, 'error');
       }
       
       if(status === 'updated'){
-         Swal.fire('Company updated','','success');
+         Swal.fire('Product updated','','success');
       }
 
   }, [errorMessage,status]);  
 
   
   return (
-    <CompanyLayout title='Company information'>
+    <ProductLayout title='Product information'>
      
     <form onSubmit={onSubmit}>
      
@@ -88,11 +88,11 @@ export const UpdateCompanyPage = () => {
 
                   <Grid container> 
                      <Grid item xs={12} sx={{mt:2}} >
-                        <TextField label='Itin'
-                                   type="text"
-                                   name="itin"
-                                   id="itin"
-                                   value={itin}
+                        <TextField label='Amount'
+                                   type="number"
+                                   name="amount"
+                                   id="amount"
+                                   value={amount}
                                    onChange={onChangeInputsValues}
                                    fullWidth
                                     />
@@ -101,24 +101,26 @@ export const UpdateCompanyPage = () => {
 
                   <Grid container>
                      <Grid item xs={12} sx={{mt:2}}>
-                        <TextField label='Address'
-                                   type="text"
-                                   name="address"
-                                   value={address}
+                        <TextField label='Price'
+                                   type="number"
+                                   name="price"
+                                   value={price}
                                    onChange={onChangeInputsValues}
                                                   
                                    fullWidth />
                      </Grid>
                   </Grid>
+                  
 
-                  <Grid container>
+                  <Grid container> 
                      <Grid item xs={12} sx={{mt:2}}>
-                        <TextField label='Phone Number'
+                        <TextField label='Description'
                                    type="text"
-                                   name="phone_number"
-                                   value={phone_number}
-                                   onChange={onChangeInputsValues}
-                                                                
+                                   name="description"
+                                   value={description}
+                                   multiline
+                                   rows={3}
+                                   onChange={onChangeInputsValues}                                                                
                                    fullWidth />
                      </Grid>
                   </Grid>
@@ -139,7 +141,7 @@ export const UpdateCompanyPage = () => {
                      
                </form>
     
-      </CompanyLayout>
+      </ProductLayout>
  
   )
 }

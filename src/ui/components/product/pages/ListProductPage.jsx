@@ -1,4 +1,4 @@
-import { Link,Button, Paper, Table, TableCell, TableHead, TableRow,Grid, TableBody,TableContainer, TablePagination, ListItemButton, ListItemIcon} from '@mui/material';
+import { Link,Button, Paper, Table, TableCell, TableHead, TableRow, TableBody,TableContainer} from '@mui/material';
 import { IconButton } from '@mui/material';
 import { AddOutlined } from '@mui/icons-material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -8,47 +8,35 @@ import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 
 
-import { CompanyLayout } from "../layout/CompanyLayout"
-import { useCompanyStore } from '../../../../hooks';
+import { useProductStore } from '../../../../hooks';
+import { ProductLayout } from '../layout/ProductLayout';
+
 
 
  
-export const ListCompanyPage = () => {
+export const ListProductPage = () => {
   
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { getAllCompanies,companies,deleteOneCompany,status } = useCompanyStore();
-
-
-  /*
-  const onClickNewCompany = () => {
-    //redirect('/company/create/');
-    console.log('asdasd');
-    
-
-    navidate('/company/create/');
-   //return <Navigate to='/company/create/'/>
+  const { getAllProducts,products,deleteOneProduct,status } = useProductStore();
   
-  }*/
-  
-  const onDeleteCompany = (companyId) => {
-     deleteOneCompany(companyId);
-  }
- 
+  const onDeleteProduct = (productId) => {
+     deleteOneProduct(productId);
+  } 
 
    useEffect(() => {
-      dispatch(getAllCompanies);
+      dispatch(getAllProducts);
 
        if(status === 'deleted'){
-         Swal.fire('Company was deleted','','success');
+         Swal.fire('Product was deleted','','success');
       }
   }, [status]); 
  
 
   return (
-    <CompanyLayout title="Companies">
+    <ProductLayout title="Products">
            <IconButton
-        onClick={ () =>{ navigate('/company/create/') } }
+        onClick={ () =>{ navigate('/product/create/') } }
         size='large'
         sx={{
           color: 'white',
@@ -65,19 +53,19 @@ export const ListCompanyPage = () => {
         <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Company</TableCell>
+                <TableCell>Product</TableCell>
                 <TableCell>View</TableCell>
                 <TableCell>Delete</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              { companies.map((company) => (
-                <TableRow key={company.id}  >
-                  <TableCell  component="th" scope="row">{company.name}</TableCell>
+              { products.map((product) => (
+                <TableRow key={product.id}  >
+                  <TableCell  component="th" scope="row">{product.name}</TableCell>
 
                   <TableCell> 
                       <Link color="inherit"
-                                    to={`/company/view/${company.id}`}
+                                    to={`/product/view/${product.id}`}
                                     component={RouterLink}>
                               <Button >
                                 <RateReviewIcon  sx={{
@@ -90,7 +78,7 @@ export const ListCompanyPage = () => {
 
                   <TableCell>
                     
-                    <Button onClick={()=>onDeleteCompany(company.id)}>
+                    <Button onClick={()=>onDeleteProduct(product.id)}>
                              <DeleteIcon sx={{
                                               color: 'error.main',
                                               backgroundColor: 'white'}}/>                              
@@ -105,7 +93,7 @@ export const ListCompanyPage = () => {
       </TableContainer>
       
   
-      </CompanyLayout>
+      </ProductLayout>
  
   )
 }

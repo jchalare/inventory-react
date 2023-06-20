@@ -6,18 +6,11 @@ import { InventoryRoutes } from '../inventory/routes/InventoryRoutes';
 import { useAuthStore } from '../hooks';
 
 
-
+ 
 
 export const AppRouter = () => {
 
     const { status, startLogin } = useAuthStore();
-
-
-    /*useEffect(() => {
-        startLogin();
-    }, []);*/
-
-
 
     if ( status === 'checking' ) {
         return (
@@ -33,7 +26,7 @@ export const AppRouter = () => {
                     ? (
                         <>
                             <Route path="/auth/*" element={ <AuthRoutes /> } />
-                            {/* <Route path="/*" element={ <Navigate to="/auth/login" /> } /> */}
+                            <Route path="/*" element={ <Navigate to="/auth/login" /> } /> 
                             
                         </>
                     )

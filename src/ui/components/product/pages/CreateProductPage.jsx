@@ -1,68 +1,70 @@
 import { Grid, TextField,Button } from "@mui/material"
-import { useCompanyStore, useForm } from "../../../../hooks";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 
-import { CompanyLayout } from "../layout/CompanyLayout"
+import { ProductLayout } from "../layout/ProductLayout"
 import { formatError } from "../../../../helpers";
+import { useProductStore, useForm } from "../../../../hooks";
 
 
- const companyFormFields = {
+
+ const productFormFields = {
     name:    '',
-    itin:    '',
-    address:    '',
-    phone_number:    '',
+    amount:    0,
+    price:    0,
+    description: '',
 }
 
  
-export const CreateCompanyPage = () => {
+export const CreateProductPage = () => {
 
-   const { errorMessage,status,postOneCompany } = useCompanyStore();
+   const { errorMessage,status,postOneProduct } = useProductStore();
 
-   const { name,itin,address,phone_number, onInputChange:onCompanyInputChange } = useForm( companyFormFields );
+   const { name,amount,price,description, onInputChange:onProductInputChange } = useForm( productFormFields );
 
     const onSubmit = (event)=>{
       event.preventDefault();
-      postOneCompany({name,itin,address,phone_number });
+      postOneProduct({name,amount,price,description });
    }
  
    useEffect(() => {
       if ( errorMessage !== null ) {         
          const formatedError = formatError(errorMessage);        
-         Swal.fire({title: 'Company errors',html: formatedError, icon:'error' });
+         Swal.fire({title: 'Product errors',html: formatedError, icon:'error' });
       }
 
       if(status === 'created'){
-            Swal.fire('Company created','','success');            
+            Swal.fire('Product created','','success');            
       }
 
     }, [errorMessage,status]);
    
   return (
-     <CompanyLayout title='Create new company'>
+     <ProductLayout title='Create new product'>
      
     <form onSubmit={onSubmit}>
      
+               
                   <Grid container >
                      <Grid item xs={12} sx={{mt:2}}>
                         <TextField label='Name'
                                    type="text"
                                    name="name"                                   
                                    value={name}
-                                   onChange={onCompanyInputChange}                                  
+                                   onChange={onProductInputChange}                                  
                                    fullWidth />
                      </Grid>
                   </Grid> 
 
                   <Grid container> 
                      <Grid item xs={12} sx={{mt:2}} >
-                        <TextField label='Itin'
-                                   type="text"
-                                   name="itin"
-                                   id="itin"
-                                   value={itin}
-                                   onChange={onCompanyInputChange}
+                        <TextField label='Amount'
+                                   type="number"
+                                   name="amount"
+                                   id="amount"
+                                   value={amount}
+                                   onChange={onProductInputChange}
                                    fullWidth
                                     />
                      </Grid>
@@ -70,23 +72,25 @@ export const CreateCompanyPage = () => {
 
                   <Grid container>
                      <Grid item xs={12} sx={{mt:2}}>
-                        <TextField label='Address'
-                                   type="text"
-                                   name="address"
-                                   value={address}
-                                   onChange={onCompanyInputChange}
-                                                  
+                        <TextField label='Price'
+                                   type="number"
+                                   name="price"
+                                   value={price}
+                                   onChange={onProductInputChange}                                                  
                                    fullWidth />
                      </Grid>
                   </Grid>
+                  
 
-                  <Grid container>
+                  <Grid container> 
                      <Grid item xs={12} sx={{mt:2}}>
-                        <TextField label='Phone Number'
+                        <TextField label='Description'
                                    type="text"
-                                   name="phone_number"
-                                   value={phone_number}
-                                   onChange={onCompanyInputChange}                                                                
+                                   name="description"
+                                   value={description}
+                                   multiline
+                                   rows={3}
+                                   onChange={onProductInputChange}                                                                
                                    fullWidth />
                      </Grid>
                   </Grid>
@@ -101,10 +105,9 @@ export const CreateCompanyPage = () => {
                         </Button>
                      </Grid>                    
                   </Grid>
-                     
                </form>
     
-      </CompanyLayout>
+      </ProductLayout>
  
   )
 }

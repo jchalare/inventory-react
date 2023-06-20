@@ -15,6 +15,7 @@ export const useAuthStore = () => {
             const { data } = await inventoryApi.post('/auth/login', { email, password });
            
             localStorage.setItem('token', data.token);
+            localStorage.setItem('roles', data.roles);
             localStorage.setItem('token-init-date', new Date().getTime());
 
             dispatch(login({...data}));

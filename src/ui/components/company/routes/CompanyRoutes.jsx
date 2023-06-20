@@ -9,7 +9,7 @@ export const CompanyRoutes = () =>{
 
     <Route path='/company' element={<ListCompanyPage />}/>
     <Route path='/company/create' element={<CreateCompanyPage />}/>
-    <Route path='/company/review/:companyId' element={<UpdateCompanyPage />}/>
+    <Route path='/company/view/:companyId' element={<UpdateCompanyPage />}/>
         
    </Routes>
    
