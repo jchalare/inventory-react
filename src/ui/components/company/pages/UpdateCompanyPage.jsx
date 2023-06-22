@@ -17,7 +17,7 @@ export const UpdateCompanyPage = () => {
     const mappingCompanyData = () => {
     return companies.map((company)=>{
          if (company.id === companyId){
-            return company;
+            return {...company};
          }
       });    
    }

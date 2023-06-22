@@ -16,7 +16,7 @@ export const UpdateProductPage = () => {
   const mappingProductData = () => {
    return products.map((product) => {
       if (product.id === productId) {
-        return product;
+        return {...product};
       }
     });
   };
