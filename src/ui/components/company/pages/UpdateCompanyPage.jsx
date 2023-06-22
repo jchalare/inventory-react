@@ -14,16 +14,15 @@ export const UpdateCompanyPage = () => {
    const { pathOneCompany,companies,getOneCompany,errorMessage,status} = useCompanyStore();
 
 
-    const mappingCompanyData = ()=> {
-      let info = {};
-      companies.map((company)=>{
+    const mappingCompanyData = () => {
+    return companies.map((company)=>{
          if (company.id === companyId){
-            info={...company};
+            return company;
          }
-      });
-      delete info.id;
-      return info; 
+      });    
    }
+
+   
 
    const [name,setName ] = useState(mappingCompanyData().name);
    const [itin,setItin ] = useState(mappingCompanyData().itin);
@@ -117,8 +116,7 @@ export const UpdateCompanyPage = () => {
                                    type="text"
                                    name="phone_number"
                                    value={phone_number}
-                                   onChange={onChangeInputsValues}
-                                                                
+                                   onChange={onChangeInputsValues}                                                                
                                    fullWidth />
                      </Grid>
                   </Grid>

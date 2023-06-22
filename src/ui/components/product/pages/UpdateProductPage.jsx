@@ -14,14 +14,11 @@ export const UpdateProductPage = () => {
     useProductStore();
 
   const mappingProductData = () => {
-    let info = {};
-    products.map((product) => {
+   return products.map((product) => {
       if (product.id === productId) {
-        info = { ...product };
+        return product;
       }
     });
-    delete info.id;
-    return info;
   };
 
   const [name, setName] = useState(mappingProductData().name);
